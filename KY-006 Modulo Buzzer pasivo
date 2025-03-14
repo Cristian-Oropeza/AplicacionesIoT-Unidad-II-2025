@@ -1,0 +1,83 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin, PWM
+import time
+
+# Configuración WiFi
+WIFI_SSID = "OmarNamekusei"
+WIFI_PASSWORD = "linux123"
+
+# Configuración MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_CLIENT_ID = "esp32_buzzerPasivo"
+MQTT_TOPIC = "iot/buzzerPasivo"
+MQTT_PORT = 1883
+
+# Configurar el buzzer pasivo
+buzzer = PWM(Pin(4))  # GPIO4 como salida PWM
+
+# Notas musicales (frecuencia en Hz y duración en ms)
+melodia = [
+    (262, 300), (294, 300), (330, 300), (349, 300),  # Do Re Mi Fa
+    (392, 300), (440, 300), (494, 300), (523, 600),  # Sol La Si Do (octava arriba)
+    (494, 300), (440, 300), (392, 300), (349, 300),  # Bajando de Do
+    (330, 300), (294, 300), (262, 600)  # Regresando a Do
+]
+
+# Función para conectar a WiFi
+def conectar_wifi():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    
+    for _ in range(30):  # Esperar 9 segundos máximo
+        if sta_if.isconnected():
+            print("✅ WiFi conectada!")
+            return
+        time.sleep(0.3)
+    
+    print("⚠ Error: No se pudo conectar a WiFi")
+
+# Función para conectar al broker MQTT
+def conectar_broker():
+    global client
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+        client.connect()
+        print(f"✅ Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+    except Exception as e:
+        print(f"⚠ Error al conectar con MQTT: {e}")
+        client = None
+
+# Función para reproducir una melodía
+def reproducir_melodia():
+    for nota, duracion in melodia:
+        buzzer.freq(nota)  # Establecer la frecuencia de la nota
+        buzzer.duty(512)   # Activar el buzzer
+        time.sleep(duracion / 1000)  # Convertir milisegundos a segundos
+        buzzer.duty(0)  # Apagar el buzzer entre notas
+        time.sleep(0.05)  # Pequeña pausa entre notas
+
+# Conectar a WiFi y MQTT
+conectar_wifi()
+conectar_broker()
+
+# Bucle principal: Reproducir la melodía y enviar estado a MQTT
+while True:
+    try:
+        print("🎵 Reproduciendo melodía...")
+        reproducir_melodia()
+        
+        if client:  # Si hay conexión MQTT
+            try:
+                client.publish(MQTT_TOPIC, "Melodía reproducida".encode())
+                print("✅ Mensaje MQTT enviado")
+            except Exception as e:
+                print(f"⚠ Error al enviar MQTT: {e}")
+                conectar_broker()  # Intentar reconectar
+        
+        time.sleep(5)  # Esperar antes de repetir la melodía
+        
+    except Exception as e:
+        print(f"⚠ Error en bucle principal: {e}")
+        time.sleep(3)
