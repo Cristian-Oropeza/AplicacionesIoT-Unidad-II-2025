@@ -1,0 +1,70 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin
+import time
+
+# Configuración WiFi
+WIFI_SSID = "OmarNamekusei"
+WIFI_PASSWORD = "linux123"
+
+# Configuración MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_CLIENT_ID = "esp32_hall_sensor"  # Identificador único
+MQTT_TOPIC = "iot/efectoHall"
+MQTT_PORT = 1883
+
+# Configurar el sensor de efecto Hall
+pin_hall = Pin(4, Pin.IN)  # GPIO4 como entrada
+
+# Función para conectar a WiFi
+def conectar_wifi():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    
+    for _ in range(30):  # Esperar 9 segundos máximo
+        if sta_if.isconnected():
+            print("✅ WiFi conectada!")
+            return
+        time.sleep(0.3)
+    
+    print("⚠ Error: No se pudo conectar a WiFi")
+
+# Función para conectar al broker MQTT
+def conectar_broker():
+    global client
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+        client.connect()
+        print(f"✅ Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+    except Exception as e:
+        print(f"⚠ Error al conectar con MQTT: {e}")
+        client = None
+
+# Conectar a WiFi y MQTT
+conectar_wifi()
+conectar_broker()
+
+# Bucle principal: Leer sensor Hall y enviar MQTT
+estado_anterior = pin_hall.value()
+
+while True:
+    try:
+        estado_actual = pin_hall.value()
+        estado_texto = "Funcionando" if estado_actual == 1 else "Funcionando"
+        
+        print(f"📡 Estado del sensor: {estado_texto}")  # Depuración en consola
+        
+        if client:  # Si hay conexión MQTT
+            try:
+                client.publish(MQTT_TOPIC, estado_texto)
+                print("✅ Mensaje MQTT enviado")
+            except Exception as e:
+                print(f"⚠ Error al enviar MQTT: {e}")
+                conectar_broker()  # Intentar reconectar
+        
+        time.sleep(1)  # Esperar 1 segundo entre lecturas
+        
+    except Exception as e:
+        print(f"⚠ Error en bucle principal: {e}")
+        time.sleep(3)
