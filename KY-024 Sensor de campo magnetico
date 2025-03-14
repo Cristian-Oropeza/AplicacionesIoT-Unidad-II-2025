@@ -1,0 +1,67 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin, ADC
+import time
+
+# Configuración WiFi
+WIFI_SSID = "OmarNamekusei"
+WIFI_PASSWORD = "linux123"
+
+# Configuración MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_CLIENT_ID = ""
+MQTT_TOPIC = "iot/campoMagnetico"  # Tópico para enviar los datos del sensor
+MQTT_PORT = 1883
+
+# Configurar el sensor de campo magnético en un pin analógico (por ejemplo, GPIO34)
+sensor_magnetico = ADC(Pin(34))  # GPIO donde está conectada la salida analógica del sensor
+sensor_magnetico.atten(ADC.ATTN_6DB)  # Rango de 0 a 2V
+
+# Conectar a WiFi
+def conectar_wifi():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    for _ in range(30):  # Esperar hasta 9 segundos
+        if sta_if.isconnected():
+            print("WiFi conectada!")
+            return
+        time.sleep(0.3)
+    print("Error: No se pudo conectar a WiFi")
+    return
+
+# Conectar a MQTT
+def conectar_broker():
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+        client.connect()
+        print(f"Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+        return client
+    except Exception as e:
+        print(f"Error al conectar con MQTT: {e}")
+        return None
+
+# Iniciar conexiones
+conectar_wifi()
+client = conectar_broker()
+
+if client:
+    while True:
+        try:
+            # Leer el valor del sensor de campo magnético (0-4095)
+            valor_magnetico = sensor_magnetico.read()
+            
+            # Convertir el valor leído a un rango interpretable
+            intensidad_magnetica = (valor_magnetico / 4095.0) * 100  # Normalización a porcentaje
+            
+            # Mostrar el valor en el monitor serial
+            print(f"Intensidad del campo magnético: {intensidad_magnetica:.2f} %")
+            
+            # Publicar el valor en el tópico MQTT
+            client.publish(MQTT_TOPIC, str(intensidad_magnetica))
+            
+            time.sleep(2)  # Esperar 2 segundos antes de tomar otra lectura
+
+        except Exception as e:
+            print(f"Error en el loop MQTT: {e}")
+            time.sleep(5)
