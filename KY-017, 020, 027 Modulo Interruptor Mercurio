@@ -1,0 +1,64 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin
+from time import sleep
+
+# Propiedades para conectar a un cliente MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_USER = ""
+MQTT_PASSWORD = ""
+MQTT_CLIENT_ID = "esp32_inter"
+MQTT_TOPIC = "iot/interruptorMercurio"
+MQTT_PORT = 1883
+
+# Configurar el interruptor de mercurio en el pin 32
+interruptor = Pin(32, Pin.IN)
+
+# Función para conectar a Wi-Fi
+def conectar_wifi():
+    print("Conectando a Wi-Fi...", end="")
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect('OmarNamekusei', 'linux123')
+    while not sta_if.isconnected():
+        print(".", end="")
+        sleep(0.3)
+    print("\nWi-Fi conectada!")
+
+# Función para conectar al broker MQTT
+def conectar_broker():
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT, user=MQTT_USER, password=MQTT_PASSWORD)
+        client.connect()
+        print(f"Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+        return client
+    except OSError as e:
+        print(f"Error al conectar con MQTT: {e}")
+        return None
+
+# Conectar a Wi-Fi
+conectar_wifi()
+
+# Conectar al broker MQTT
+client = conectar_broker()
+
+estado_anterior = interruptor.value()
+
+# Ciclo infinito
+while True:
+    client.check_msg()  # Comprobar si hay mensajes entrantes
+    estado_actual = interruptor.value()
+    
+    if estado_actual != estado_anterior:  # Solo actuar cuando el interruptor cambia de estado
+        if estado_actual == 1:
+            mensaje = "Posicion inclinada."
+        else:
+            mensaje = "Posicion normal."
+        
+        print(mensaje)  # Mostrar mensaje en la consola
+        if client:
+            client.publish(MQTT_TOPIC, mensaje)  # Publicar estado del interruptor en MQTT
+        
+        estado_anterior = estado_actual  # Actualizar estado
+    
+    sleep(0.5)  # Esperar un poco antes de la siguiente lectura
