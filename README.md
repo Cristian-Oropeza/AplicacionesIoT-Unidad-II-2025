@@ -12,7 +12,8 @@ https://docs.google.com/document/d/1FJRWTIHqKsJzh3e6KGQRGiul6azEvCcy1akl4IMCD14/
 
 
 Omar Salinas Salinas 
-Pon tu drive del curso
+
+https://docs.google.com/document/d/1T3CDUK5ZRxfeS055wadpY3zf_hkZzOLU0-GHspYpoiQ/edit?usp=sharing
 
 <h1>Videos</h1>
 
