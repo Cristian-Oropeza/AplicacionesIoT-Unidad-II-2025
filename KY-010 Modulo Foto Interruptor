@@ -1,0 +1,117 @@
+import network
+
+from umqtt.simple import MQTTClient
+
+from machine import Pin
+
+import time
+
+
+
+# Configuración WiFi
+
+WIFI_SSID = "OmarNamekusei"
+
+WIFI_PASSWORD = "linux123"
+
+
+
+# Configuración MQTT
+
+MQTT_BROKER = "192.168.137.237"
+
+MQTT_CLIENT_ID = "ESP32_FotoInterruptor"
+
+MQTT_TOPIC = "iot/fotoInterruptor"
+
+MQTT_PORT = 1883
+
+
+
+# Configurar pin del foto interruptor
+
+foto_interruptor = Pin(5, Pin.IN)  # Ajusta el pin según tu conexión
+
+
+
+# Conectar a WiFi
+
+def conectar_wifi():
+
+    sta_if = network.WLAN(network.STA_IF)
+
+    sta_if.active(True)
+
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+
+    for _ in range(30):  # Esperar hasta 9 segundos
+
+        if sta_if.isconnected():
+
+            print("WiFi conectada!")
+
+            return
+
+        time.sleep(0.3)
+
+    print("Error: No se pudo conectar a WiFi")
+
+    return
+
+
+
+# Conectar a MQTT
+
+def conectar_broker():
+
+    try:
+
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+
+        client.connect()
+
+        print(f"Conectado a MQTT Bróker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+
+        return client
+
+    except Exception as e:
+
+        print(f"Error al conectar con MQTT: {e}")
+
+        return None
+
+
+
+# Iniciar conexiones
+
+conectar_wifi()
+
+client = conectar_broker()
+
+
+
+# Estado anterior del foto interruptor
+
+estado_anterior = foto_interruptor.value()
+
+
+
+# Bucle infinito para monitorear el sensor
+
+while True:
+
+    estado_actual = foto_interruptor.value()
+
+    if estado_actual != estado_anterior:
+
+        mensaje = "Interrumpido" if estado_actual == 0 else "Libre"
+
+        print(f"Estado del sensor: {mensaje}")
+
+        if client:
+
+            client.publish(MQTT_TOPIC, mensaje)
+
+        estado_anterior = estado_actual
+
+    time.sleep(0.5)  # Pequeña espera para evitar rebotes
