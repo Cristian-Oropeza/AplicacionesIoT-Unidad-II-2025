@@ -21,7 +21,7 @@ https://docs.google.com/document/d/1T3CDUK5ZRxfeS055wadpY3zf_hkZzOLU0-GHspYpoiQ/
 https://drive.google.com/drive/folders/1H4cCVvu0a9SsR2EdSeyr8ZIxK3_XsQKL?usp=sharing
 
 ## Omar Salinas:
-Pon tu carpeta de los videos
+https://drive.google.com/drive/folders/1TArzFdjSycAz3bWrPCf7eCWuHXNl6iGG?usp=sharing
 
 <h1>Flujos</h1>
 
