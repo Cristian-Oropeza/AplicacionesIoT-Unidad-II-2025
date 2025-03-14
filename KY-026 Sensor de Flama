@@ -1,0 +1,65 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin, ADC
+import time
+
+# Configuración WiFi
+WIFI_SSID = "OmarNamekusei"
+WIFI_PASSWORD = "linux123"
+
+# Configuración MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_CLIENT_ID = "ESP32_SENSOR_FLAME"
+MQTT_TOPIC = "iot/flama"
+MQTT_PORT = 1883
+
+# Configurar el sensor de llama KY-026 en el pin analógico 34
+sensor_llama = ADC(Pin(34))  # Configuración de pin 34 como entrada analógica
+sensor_llama.atten(ADC.ATTN_0DB)  # Ajuste de atenuación (0dB es para rango 0-1V)
+sensor_llama.width(ADC.WIDTH_12BIT)  # Resolución de 12 bits (0-4095)
+
+# Conectar a WiFi
+def conectar_wifi():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    for _ in range(30):  # Esperar hasta 9 segundos
+        if sta_if.isconnected():
+            print("WiFi conectada!")
+            return
+        time.sleep(0.3)
+    print("Error: No se pudo conectar a WiFi")
+    return
+
+# Conectar a MQTT
+def conectar_broker():
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+        client.connect()
+        print(f"Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+        return client
+    except Exception as e:
+        print(f"Error al conectar con MQTT: {e}")
+        return None
+
+# Iniciar conexiones
+conectar_wifi()
+client = conectar_broker()
+
+# Bucle infinito para leer el sensor de llama
+while True:
+    # Leer valor analógico del sensor de llama
+    valor_sensor = sensor_llama.read()  # Leer el valor del ADC (0-4095)
+
+    # Interpretar el valor del sensor (ajustar el umbral según el sensor)
+    if valor_sensor > 100:  # Umbral para detectar llama (ajusta según tus pruebas)
+        mensaje = "No se detecta llama"
+    else:
+        mensaje = "Llama detectada"
+
+    print(f"Valor sensor: {valor_sensor} - {mensaje}")
+    
+    if client:
+        client.publish(MQTT_TOPIC, mensaje)
+
+    time.sleep(3)  # Reducir tiempo de muestreo para mejor respuesta
