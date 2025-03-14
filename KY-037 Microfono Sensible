@@ -1,0 +1,64 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin
+from time import sleep
+
+# Configurar el módulo de micrófono en el pin 32 con pull-up
+microfono = Pin(33, Pin.IN, Pin.PULL_UP)
+
+# Conectar a Wi-Fi
+def conectar_wifi():
+    print("Conectando a Wi-Fi...", end="")
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect('OmarNamekusei', 'linux123')
+    while not sta_if.isconnected():
+        print(".", end="")
+        sleep(0.3)
+    print("\nWi-Fi conectada!")
+
+# Conectar a MQTT
+def conectar_broker():
+    try:
+        client = MQTTClient("esp32_microfono", "192.168.137.237", port=1883)
+        client.connect()
+        print("Conectado a MQTT")
+        return client
+    except Exception as e:
+        print(f"Error al conectar MQTT: {e}")
+        return None
+
+# Conectar
+conectar_wifi()
+client = conectar_broker()
+
+estado_anterior = microfono.value()
+
+# Ciclo infinito
+while True:
+    client.check_msg()  # Comprobar mensajes entrantes
+    estado_actual = microfono.value()
+    
+    print("Estado actual:", estado_actual)
+    
+    if estado_actual != estado_anterior:
+        mensaje = "Sonido detectado!" if estado_actual == 1 else "Silencio."
+        print(mensaje)
+        if client:
+            client.publish("iot/microfonoSensible", mensaje)
+        
+        estado_anterior = estado_actual
+    
+    sleep(0.6)
+
+
+
+
+
+
+
+
+
+
+
+
