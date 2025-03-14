@@ -1,0 +1,78 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin
+import time
+
+# Configuración WiFi
+WIFI_SSID = "OmarNamekusei"
+WIFI_PASSWORD = "linux123"
+
+# Configuración MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_CLIENT_ID = ""
+MQTT_TOPIC = "iot/reedSwitch"
+MQTT_PORT = 1883
+
+# Configurar el sensor Reed Switch KY-025 (salida digital)
+sensor_reed = Pin(34, Pin.IN, Pin.PULL_UP)  # Entrada digital del sensor Reed Switch en pin 34
+
+# Conectar a WiFi
+def conectar_wifi():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    for _ in range(30):  # Esperar hasta 9 segundos
+        if sta_if.isconnected():
+            print("WiFi conectada!")
+            return
+        time.sleep(0.3)
+    print("Error: No se pudo conectar a WiFi")
+    return
+
+# Conectar a MQTT
+def conectar_broker():
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+        client.connect()
+        print(f"Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+        return client
+    except Exception as e:
+        print(f"Error al conectar con MQTT: {e}")
+        return None
+
+# Reconectar a MQTT si se pierde la conexión
+def reconnect_mqtt(client):
+    print("Reconectando a MQTT...")
+    client.connect()
+    print(f"Reconectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+
+# Iniciar conexiones
+conectar_wifi()
+client = conectar_broker()
+
+# Bucle infinito para leer el sensor Reed Switch
+while True:
+    try:
+        # Leer el valor del sensor Reed Switch (0 cuando está cerrado, 1 cuando está abierto)
+        estado = sensor_reed.value()  # 0 cuando el interruptor está cerrado, 1 cuando está abierto
+
+        if estado == 0:
+            mensaje = "Imán cerca - Interruptor cerrado"
+        else:
+            mensaje = "Imán lejos - Interruptor abierto"
+
+        print(mensaje)
+
+        if client:
+            # Verificar si el cliente está conectado, y reconectar si es necesario
+            if not client.isconnected():
+                reconnect_mqtt(client)
+
+            client.publish(MQTT_TOPIC, mensaje)
+
+    except OSError as e:
+        print(f"Error de OSError: {e}")
+        if client:
+            reconnect_mqtt(client)
+
+    time.sleep(3)  # Reducir tiempo de muestreo para mejor respuesta
