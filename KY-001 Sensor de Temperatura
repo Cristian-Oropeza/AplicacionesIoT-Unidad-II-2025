@@ -1,0 +1,63 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin, ADC
+import time
+
+# Configuración WiFi
+WIFI_SSID = "OmarNamekusei"
+WIFI_PASSWORD = "linux123"
+
+# Configuración MQTT
+MQTT_BROKER = "192.168.137.237"
+MQTT_CLIENT_ID = "ESP32_Temperatura"
+MQTT_TOPIC = "iot/temperatura"
+MQTT_PORT = 1883
+
+# Configurar sensor de temperatura (ajustar el pin según el sensor)
+temp_sensor = ADC(Pin(34))  # Usando un pin ADC
+
+# Umbral de temperatura para definir caliente o frío
+UMBRAL_TEMPERATURA = 30  # Ajustar según necesidad
+
+# Conectar a WiFi
+def conectar_wifi():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    for _ in range(30):  # Esperar hasta 9 segundos
+        if sta_if.isconnected():
+            print("WiFi conectada!")
+            return
+        time.sleep(0.3)
+    print("Error: No se pudo conectar a WiFi")
+    return
+
+# Conectar a MQTT
+def conectar_broker():
+    try:
+        client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, port=MQTT_PORT)
+        client.connect()
+        print(f"Conectado a MQTT Broker: {MQTT_BROKER}, Topic: {MQTT_TOPIC}")
+        return client
+    except Exception as e:
+        print(f"Error al conectar con MQTT: {e}")
+        return None
+
+# Iniciar conexiones
+conectar_wifi()
+client = conectar_broker()
+
+# Bucle infinito para leer la temperatura
+def leer_temperatura():
+    valor_adc = temp_sensor.read()
+    temperatura = (valor_adc / 4095.0) * 100  # Conversión ejemplo, depende del sensor
+    return temperatura
+
+while True:
+    temperatura = leer_temperatura()
+    estado = 1 if temperatura >= UMBRAL_TEMPERATURA else 0
+    mensaje = f"Estado: {estado} (1=Caliente, 0=Frío)"
+    print(mensaje)
+    if client:
+        client.publish(MQTT_TOPIC, str(estado))
+    time.sleep(5)  # Enviar datos cada 5 segundos
