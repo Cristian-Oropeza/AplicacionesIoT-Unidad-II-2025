@@ -7,6 +7,7 @@ UNIDAD: I. Adquisición y Procesamiento de Datos
 Omar Salinas Salinas - Cristian Efraín Oropeza Yepiz
 ## Fundamentos de JavaScript 2
 Cristian Efraín Oropeza Yepiz
+
 https://docs.google.com/document/d/1FJRWTIHqKsJzh3e6KGQRGiul6azEvCcy1akl4IMCD14/edit?usp=sharing
 Omar Salinas Salinas 
 Pon tu drive del curso
