@@ -1,0 +1,595 @@
+[
+    {
+        "id": "5b876d3f9c3d68f6",
+        "type": "tab",
+        "label": "Sesion 5",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2f1cf3d2836e7ab5",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "INSERT INTO sensors_details(sensor_id, user_id, value) VALUES(17, 1,'{{{msg.payload}}}');",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 730,
+        "y": 220,
+        "wires": [
+            [
+                "9eebea5173d65bea"
+            ]
+        ]
+    },
+    {
+        "id": "0af2b10b3ce7724f",
+        "type": "mqtt in",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "topic": "iot/temperaturaAnalogica",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "a57d88d4734bd2a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 510,
+        "y": 220,
+        "wires": [
+            [
+                "2f1cf3d2836e7ab5"
+            ]
+        ]
+    },
+    {
+        "id": "9eebea5173d65bea",
+        "type": "debug",
+        "z": "5b876d3f9c3d68f6",
+        "name": "debug 17",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1fab6f99c084d542",
+        "type": "inject",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "7e77733195120afe"
+            ]
+        ]
+    },
+    {
+        "id": "7e77733195120afe",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "SELECT * FROM sensors_details;",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 630,
+        "y": 320,
+        "wires": [
+            [
+                "ae6e8609899b400c"
+            ]
+        ]
+    },
+    {
+        "id": "ae6e8609899b400c",
+        "type": "ui_table",
+        "z": "5b876d3f9c3d68f6",
+        "group": "f71be90fe7878804",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 790,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e563cba6feb2c9f7",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "INSERT INTO sensors_details(sensor_id, user_id, value) VALUES(18, 1,'{{{msg.payload}}}');",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 710,
+        "y": 620,
+        "wires": [
+            [
+                "27448c4a5100d14e"
+            ]
+        ]
+    },
+    {
+        "id": "0d0d1c2489270128",
+        "type": "mqtt in",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "topic": "iot/temperaturaHumedad",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "a57d88d4734bd2a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 490,
+        "y": 620,
+        "wires": [
+            [
+                "e563cba6feb2c9f7"
+            ]
+        ]
+    },
+    {
+        "id": "27448c4a5100d14e",
+        "type": "debug",
+        "z": "5b876d3f9c3d68f6",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "287802684d689146",
+        "type": "inject",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 720,
+        "wires": [
+            [
+                "b6ee76126f4311ff"
+            ]
+        ]
+    },
+    {
+        "id": "b6ee76126f4311ff",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "SELECT * FROM sensors_details;",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 720,
+        "wires": [
+            [
+                "5ee85b5698e85d21"
+            ]
+        ]
+    },
+    {
+        "id": "5ee85b5698e85d21",
+        "type": "ui_table",
+        "z": "5b876d3f9c3d68f6",
+        "group": "255aad09f9dd1cb5",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 770,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "d9c1d46de3b13ae1",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "INSERT INTO sensors_details(sensor_id, user_id, value) VALUES(19, 1,'{{{msg.payload}}}');",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 710,
+        "y": 980,
+        "wires": [
+            [
+                "fb17509817b13c86"
+            ]
+        ]
+    },
+    {
+        "id": "da9e989f0648c8e6",
+        "type": "mqtt in",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "topic": "iot/relevador",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "a57d88d4734bd2a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 450,
+        "y": 980,
+        "wires": [
+            [
+                "d9c1d46de3b13ae1"
+            ]
+        ]
+    },
+    {
+        "id": "fb17509817b13c86",
+        "type": "debug",
+        "z": "5b876d3f9c3d68f6",
+        "name": "debug 19",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "bfb777be982b9b7e",
+        "type": "inject",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 1080,
+        "wires": [
+            [
+                "d9369d65f10ef145"
+            ]
+        ]
+    },
+    {
+        "id": "d9369d65f10ef145",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "SELECT * FROM sensors_details;",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 1080,
+        "wires": [
+            [
+                "1aa042527688ba58"
+            ]
+        ]
+    },
+    {
+        "id": "1aa042527688ba58",
+        "type": "ui_table",
+        "z": "5b876d3f9c3d68f6",
+        "group": "07ecae26c9b0c839",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 770,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "88b942029b195391",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "INSERT INTO sensors_details(sensor_id, user_id, value) VALUES(20, 1,'{{{msg.payload}}}');",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 710,
+        "y": 1340,
+        "wires": [
+            [
+                "417e60cb20506450"
+            ]
+        ]
+    },
+    {
+        "id": "7369a2dbd923ba90",
+        "type": "mqtt in",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "topic": "iot/fotorresistencia",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "a57d88d4734bd2a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 470,
+        "y": 1340,
+        "wires": [
+            [
+                "88b942029b195391"
+            ]
+        ]
+    },
+    {
+        "id": "417e60cb20506450",
+        "type": "debug",
+        "z": "5b876d3f9c3d68f6",
+        "name": "debug 20",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "9b6c533fae490b60",
+        "type": "inject",
+        "z": "5b876d3f9c3d68f6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 1440,
+        "wires": [
+            [
+                "7293d6b8782d726d"
+            ]
+        ]
+    },
+    {
+        "id": "7293d6b8782d726d",
+        "type": "postgresql",
+        "z": "5b876d3f9c3d68f6",
+        "name": "Postgresql",
+        "query": "SELECT * FROM sensors_details;",
+        "postgreSQLConfig": "bbcf4a17e21656b9",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 1440,
+        "wires": [
+            [
+                "2c5a512677987d2e"
+            ]
+        ]
+    },
+    {
+        "id": "2c5a512677987d2e",
+        "type": "ui_table",
+        "z": "5b876d3f9c3d68f6",
+        "group": "3ea11246bbb4b10e",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 770,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "bbcf4a17e21656b9",
+        "type": "postgreSQLConfig",
+        "name": "ConexionPostgresql",
+        "host": "127.0.0.1",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "aiot",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "utng",
+        "userFieldType": "str",
+        "password": "1234",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "a57d88d4734bd2a9",
+        "type": "mqtt-broker",
+        "name": "BaspberryPi",
+        "broker": "192.168.137.237",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f71be90fe7878804",
+        "type": "ui_group",
+        "name": "TemperaturaAnalogica",
+        "tab": "d1e7d1f97956a1c2",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "255aad09f9dd1cb5",
+        "type": "ui_group",
+        "name": "TemperaturaHumedad",
+        "tab": "d1e7d1f97956a1c2",
+        "order": 2,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "07ecae26c9b0c839",
+        "type": "ui_group",
+        "name": "Relevador",
+        "tab": "d1e7d1f97956a1c2",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3ea11246bbb4b10e",
+        "type": "ui_group",
+        "name": "Fotorresistencia",
+        "tab": "d1e7d1f97956a1c2",
+        "order": 4,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d1e7d1f97956a1c2",
+        "type": "ui_tab",
+        "name": "Sesion 5",
+        "icon": "dashboard",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    }
+]
