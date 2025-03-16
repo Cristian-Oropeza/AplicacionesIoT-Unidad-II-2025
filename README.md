@@ -28,10 +28,15 @@ https://drive.google.com/drive/folders/1TArzFdjSycAz3bWrPCf7eCWuHXNl6iGG?usp=sha
 ## Pareja:
 https://drive.google.com/drive/folders/1wwXpLuyHWxJUP-JkvBALCLP0pzMRKQpz?usp=drive_link
 
-<h1>Figura placa fenolica</h1>
+<h1>Ejercicio de Soldadura (Circuito leds, resistencias)</h1>
 
 ## Cristian Oropeza:
+![Imagen de WhatsApp 2025-03-15 a las 20 05 55_feb4e23a](https://github.com/user-attachments/assets/bb5f9e5e-9bfa-40d3-b9aa-b79a13c17285)
+![Imagen de WhatsApp 2025-03-15 a las 20 05 55_cba36e07](https://github.com/user-attachments/assets/5cb48733-a232-42dd-a3f9-d908e3d594ef)
+![Imagen de WhatsApp 2025-03-15 a las 20 05 55_b41a8828](https://github.com/user-attachments/assets/fffb0a4b-d99b-4c13-9110-8cd41bd545ee)
+Video de funcionamiento: https://drive.google.com/file/d/1rywPlK_cK0hCJWXu9CyQlXI0wFFB7UA1/view?usp=sharing 
 
 
-## Omar Salina:
+
+## Omar Salinas:
 Sube la foto de tu figura con leds
