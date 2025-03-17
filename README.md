@@ -39,4 +39,10 @@ Video de funcionamiento: https://drive.google.com/file/d/1rywPlK_cK0hCJWXu9CyQlX
 
 
 ## Omar Salinas:
-Sube la foto de tu figura con leds
+![Imagen de WhatsApp 2025-03-16 a las 20 47 50_3fe3aaaa](https://github.com/user-attachments/assets/3654e883-e7ac-4f57-9efc-9c2389daa738)
+![Imagen de WhatsApp 2025-03-16 a las 20 47 50_d2ddb058](https://github.com/user-attachments/assets/ee79e120-a14b-479e-a701-6c24bbed8dba)
+![Imagen de WhatsApp 2025-03-16 a las 20 51 18_a7a7c27a](https://github.com/user-attachments/assets/f7dda2af-39d4-497a-9134-b05e4a055776)
+
+
+
+Video de funcionamiento: https://drive.google.com/file/d/1YTMPO9WilhSBiOdJ2risAkGkqoxbrOQx/view?usp=sharing
